@@ -1,5 +1,5 @@
 {
-  "name": "Data Claude Hub",
+  "name": "Claude Code Data Hub",
   "image": "mcr.microsoft.com/devcontainers/python:3.13",
   "features": {
     "ghcr.io/devcontainers/features/github-cli:1": {},
@@ -20,7 +20,7 @@
   },
   "secrets": {
     "GOOGLE_APPLICATION_CREDENTIALS_JSON": {
-      "description": "GCP service account key (JSON) for BigQuery/FHIR access"
+      "description": "GCP service account key (JSON) for BigQuery access"
     },
     "LINEAR_API_KEY": {
       "description": "Linear API key for issue management"

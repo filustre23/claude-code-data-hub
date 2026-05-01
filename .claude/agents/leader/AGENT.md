@@ -48,7 +48,6 @@ Surface these names in the plan's "Phase X" headers when invoking them, so the u
    | Service | Check Command | Login Command |
    |---------|--------------|---------------|
    | `bigquery` | `gcloud auth application-default print-access-token 2>/dev/null` | `gcloud auth application-default login` |
-   | `fhir` | `gcloud auth application-default print-access-token 2>/dev/null` | `gcloud auth application-default login` |
    | `github` | `gh auth status` | `gh auth login` |
    | `linear` | `LINEAR_API_KEY` env var | Set env var from https://linear.app/settings/api |
    | `snowflake` | `SNOWFLAKE_ACCOUNT` env var or `profiles.yml` | Set `SNOWFLAKE_*` env vars or configure `profiles.yml` |

@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-echo "Setting up Data Claude Hub environment..."
+echo "Setting up Claude Code Data Hub environment..."
 
 # Install uv
 if ! command -v uv &>/dev/null; then
@@ -26,9 +26,9 @@ if [ -n "${GOOGLE_APPLICATION_CREDENTIALS_JSON:-}" ]; then
   echo "$GOOGLE_APPLICATION_CREDENTIALS_JSON" > ~/.config/gcloud/application_default_credentials.json
   export GOOGLE_APPLICATION_CREDENTIALS="$HOME/.config/gcloud/application_default_credentials.json"
   echo "export GOOGLE_APPLICATION_CREDENTIALS=\"$HOME/.config/gcloud/application_default_credentials.json\"" >> ~/.bashrc
-  echo "BigQuery/FHIR: Configured from Codespace secret"
+  echo "BigQuery: Configured from Codespace secret"
 else
-  echo "BigQuery/FHIR: Not configured. Add GOOGLE_APPLICATION_CREDENTIALS_JSON as a Codespace secret or run: gcloud auth application-default login"
+  echo "BigQuery: Not configured. Add GOOGLE_APPLICATION_CREDENTIALS_JSON as a Codespace secret or run: gcloud auth application-default login"
 fi
 
 # Check Linear
