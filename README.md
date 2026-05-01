@@ -1,15 +1,24 @@
 # Claude Code Data Hub
 
-Personal Claude Code launchpad themed around Pokemon datasets. Launch Claude from this repo and work on your projects via `additionalDirectories`.
+Public Claude Code launchpad for data work. Launch Claude from this repo and work on your projects via `additionalDirectories`. Ships with a Pokemon-themed example dataset (catalog + KB seeds + memories) so you can see the pieces wired together — **swap that out for your own domain on day one**.
+
+## Make it yours
+
+The Pokemon framing is example data, not the point. After cloning, ask Claude to adapt the hub to your stack — for example:
+
+> "Read the repo, then convert the catalog, KB seeds, and memories from the Pokemon example to my stack: warehouse `<bigquery|snowflake|duckdb>` at project `<your-project>`, domain `<healthcare claims | e-commerce orders | ad-tech impressions | ...>`. Replace `catalog/kanto.yml` and `catalog/johto.yml` with my real datasets, rewrite `lib/kb/ingest/*.py` for my doc types, and reseed `memory/*` with my actual projects."
+
+Claude will read the existing structure and propose a diff. The framework (orchestration, skills, hooks, ChromaDB KB, two-tier memory) is domain-agnostic; only the example content needs replacing.
 
 ## Quick Start
 
 1. Clone the repo and `cd` into it
 2. Run `ln -sf ../../hooks/check_no_secrets.sh .git/hooks/pre-commit`
-3. Launch `claude`
-4. Approve the shared hooks when prompted
-5. Run `/setup-init` — the interactive wizard will configure your project directories and any service auth you need (BigQuery, GitHub, Linear, Snowflake)
-6. Seed the local KB:
+3. Run `uv sync` to install dependencies
+4. Launch `claude`
+5. Approve the shared hooks when prompted
+6. Run `/setup-init` — the interactive wizard will configure your project directories and any service auth you need (BigQuery, GitHub, Linear, Snowflake)
+7. Seed the local KB (these are the example seeds — replace with your own):
    ```
    uv run python -m lib.kb.ingest.pokedex_entry
    uv run python -m lib.kb.ingest.move_definition
