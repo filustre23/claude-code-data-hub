@@ -1,0 +1,49 @@
+name: CI
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Validate agent frontmatter and skill structure
+        run: bash tests/test_frontmatter.sh
+
+      - name: Validate ecosystem integrity
+        run: bash tests/test_integrity.sh
+
+      - name: Lint shell scripts
+        uses: ludeeus/action-shellcheck@master
+        with:
+          scandir: ./hooks ./tests
+
+      - name: Scan for secrets
+        run: |
+          FOUND=0
+          while IFS= read -r file; do
+            # Skip binary, lock, image, font files
+            if echo "$file" | grep -qE '\.(lock|png|jpg|jpeg|gif|svg|ico|woff|woff2|ttf|eot)$'; then
+              continue
+            fi
+            # Check for Bearer tokens
+            if grep -qE 'Bearer [A-Za-z0-9_\-]{20,}' "$file" 2>/dev/null; then
+              echo "SECRETS FOUND in $file: Bearer token detected"
+              FOUND=1
+            fi
+            # Check for API key patterns
+            if grep -qE '(api_key|secret_key|access_token|api_secret|private_key)=["\x27]?[A-Za-z0-9_\-]{16,}' "$file" 2>/dev/null; then
+              echo "SECRETS FOUND in $file: API key pattern detected"
+              FOUND=1
+            fi
+          done < <(git ls-files)
+          if [ "$FOUND" -eq 1 ]; then
+            echo "Secret scan failed. Remove secrets before committing."
+            exit 1
+          fi
+          echo "Secret scan passed."

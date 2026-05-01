@@ -1,0 +1,83 @@
+{
+  "autoMemoryEnabled": false,
+  "statusLine": {
+    "type": "command",
+    "command": "input=$(cat); used=$(echo \"$input\" | jq -r '.context_window.used_percentage // empty'); remaining=$(echo \"$input\" | jq -r '.context_window.remaining_percentage // empty'); [ -n \"$used\" ] && printf \"Context: %.0f%% used (%.0f%% remaining)\" \"$used\" \"$remaining\" || echo \"Context: --\""
+  },
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "git pull --ff-only 2>/dev/null || true",
+            "timeout": 15,
+            "statusMessage": "Pulling latest changes..."
+          },
+          {
+            "type": "command",
+            "command": "bash hooks/first_time_init.sh",
+            "timeout": 10,
+            "statusMessage": "Checking first-time setup..."
+          },
+          {
+            "type": "command",
+            "command": "uv sync",
+            "timeout": 60,
+            "statusMessage": "Syncing uv environment..."
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash hooks/uv_auto_add.sh",
+            "timeout": 30,
+            "statusMessage": "Checking for missing Python packages..."
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash hooks/kb_prelude.sh",
+            "timeout": 10,
+            "statusMessage": "Pulling KB context..."
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash hooks/block_prod_ddl.sh",
+            "timeout": 5,
+            "statusMessage": "Checking for prod DDL..."
+          }
+        ]
+      }
+    ],
+    "SessionEnd": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash hooks/memory_consolidate.sh",
+            "timeout": 20,
+            "statusMessage": "Proposing memory updates..."
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "mcpServers": {
+    "dbt": {
+      "command": "uvx",
+      "args": ["dbt-mcp"],
+      "env": {
+        "DBT_PROJECT_DIR": "${DBT_PROJECT_DIR}",
+        "DBT_PROFILES_DIR": "${DBT_PROFILES_DIR}",
+        "DBT_CLOUD_API_TOKEN": "${DBT_CLOUD_API_TOKEN}",
+        "DBT_CLOUD_ACCOUNT_ID": "${DBT_CLOUD_ACCOUNT_ID}"
+      },
+      "description": "Official dbt Labs MCP server. Live access to dbt Cloud jobs, runs, manifests, and dbt Core CLI. Skills connection-dbt/dbt-run/dbt-admin become methodology wrappers around this."
+    },
+    "google-data-toolbox": {
+      "command": "toolbox",
+      "args": ["--tools-file", "tools.yaml"],
+      "description": "Google MCP Data Toolbox — unified BigQuery + Postgres access. Replaces shell-out for query/fetch operations in connection-bigquery. See https://github.com/googleapis/genai-toolbox for setup. Requires a tools.yaml at repo root."
+    },
+    "linear": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-linear"],
+      "env": {
+        "LINEAR_API_KEY": "${LINEAR_API_KEY}"
+      },
+      "description": "Linear MCP server. Replaces curl+GraphQL in connection-linear for issue/project/team operations."
+    }
+  }
+}

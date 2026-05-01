@@ -1,0 +1,81 @@
+# Johto — Region Catalog
+# Structural metadata only — descriptions, column details, and row counts live in the KB
+
+tenant: johto
+gcp_project: pokemon-warehouse
+default_dataset: johto
+
+datasets:
+  johto:
+    role: prod
+    tables:
+      pokemon:
+        grain: pokemon_id
+      species:
+        grain: species_id
+        clustered_by: [type_primary, type_secondary]
+      trainer:
+        grain: trainer_id
+      trainer_team:
+        grain: trainer_id + slot
+        clustered_by: [trainer_id]
+      gym_badge:
+        grain: trainer_id + badge_id
+        clustered_by: [trainer_id]
+      route_encounter:
+        grain: route_id + species_id + encounter_window
+        partitioned_by: encounter_date
+        clustered_by: [route_id, species_id, encounter_window]
+      day_care_session:
+        grain: session_id
+        partitioned_by: start_date
+        clustered_by: [trainer_id, pokemon_id]
+      egg_hatch:
+        grain: egg_id
+        partitioned_by: hatch_date
+        clustered_by: [trainer_id]
+      battle_log:
+        grain: battle_id
+        partitioned_by: battle_date
+        clustered_by: [trainer_id, opponent_id]
+      pokeathlon_event:
+        grain: event_id
+        partitioned_by: event_date
+        clustered_by: [trainer_id, sport]
+
+  johto_staging:
+    role: staging
+    tables:
+      stg_pokemon:
+      stg_species:
+      stg_trainer:
+      stg_trainer_team:
+      stg_gym_badge:
+      stg_route_encounter:
+      stg_day_care_session:
+      stg_egg_hatch:
+      stg_battle_log:
+      stg_pokeathlon_event:
+      int_breeding_lineage:
+        clustered_by: [pokemon_id]
+      int_johto_kanto_crossover:
+        clustered_by: [trainer_id]
+
+  johto_signal:
+    role: signal
+    tables:
+      shiny_encounter_rate:
+      breeding_iv_distribution:
+
+  pokeapi_staging:
+    role: source
+    shared: true
+
+  pokeapi:
+    role: source
+    shared: true
+
+resolution_order:
+  - johto
+  - johto_staging
+  - johto_signal

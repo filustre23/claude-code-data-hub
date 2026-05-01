@@ -1,0 +1,27 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["lib"]
+
+[project]
+name = "claude-code-data-hub"
+version = "0.1.0"
+description = "Personal Claude Code launchpad — agents, skills, hooks, and a local ChromaDB knowledge base"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "anthropic>=0.86.0",
+    "chromadb>=0.5.0",
+    "dbt-bigquery>=1.11.1",
+    "dbt-core>=1.11.7",
+    "google-cloud-bigquery>=3.40.1",
+    "httpx>=0.28.1",
+    "pydantic-settings>=2.13.1",
+    "pytest>=9.0.2",
+    "pytest-asyncio>=1.3.0",
+    "sentence-transformers>=3.0.0",
+    "structlog>=25.5.0",
+    "typer>=0.24.1",
+]

@@ -1,0 +1,93 @@
+# Kanto — Region Catalog
+# Structural metadata only — descriptions, column details, and row counts live in the KB
+
+tenant: kanto
+gcp_project: pokemon-warehouse
+default_dataset: kanto
+
+datasets:
+  kanto:
+    role: prod
+    tables:
+      pokemon:
+        grain: pokemon_id
+      species:
+        grain: species_id
+        clustered_by: [type_primary, type_secondary]
+      trainer:
+        grain: trainer_id
+      trainer_team:
+        grain: trainer_id + slot
+        clustered_by: [trainer_id]
+      gym_badge:
+        grain: trainer_id + badge_id
+        clustered_by: [trainer_id]
+      route_encounter:
+        grain: route_id + species_id + encounter_window
+        partitioned_by: encounter_date
+        clustered_by: [route_id, species_id]
+      battle_log:
+        grain: battle_id
+        partitioned_by: battle_date
+        clustered_by: [trainer_id, opponent_id]
+      battle_turn:
+        grain: battle_id + turn_no
+        partitioned_by: battle_date
+        clustered_by: [battle_id]
+      move_used:
+        grain: battle_id + turn_no + slot
+        partitioned_by: battle_date
+        clustered_by: [pokemon_id, move_id]
+      item_inventory:
+        grain: trainer_id + item_id
+        clustered_by: [trainer_id]
+      poke_center_visit:
+        grain: visit_id
+        partitioned_by: visit_date
+        clustered_by: [trainer_id]
+
+  kanto_staging:
+    role: staging
+    tables:
+      stg_pokemon:
+      stg_species:
+      stg_trainer:
+      stg_trainer_team:
+      stg_gym_badge:
+      stg_route_encounter:
+      stg_battle_log:
+      stg_battle_turn:
+      stg_move_used:
+      stg_item_inventory:
+      int_pokemon_level_stats:
+        clustered_by: [pokemon_id]
+      int_trainer_progression:
+        clustered_by: [trainer_id]
+      int_route_rarity:
+        clustered_by: [route_id, species_id]
+
+  kanto_signal:
+    role: signal
+    tables:
+      gym_leader_winrate:
+      type_matchup_imbalance:
+
+  pokedex_analytics:
+    role: analytics
+    tables:
+      species_popularity:
+      regional_dex_completion:
+
+  pokeapi_staging:
+    role: source
+    shared: true
+
+  pokeapi:
+    role: source
+    shared: true
+
+resolution_order:
+  - kanto
+  - kanto_staging
+  - kanto_signal
+  - pokedex_analytics
